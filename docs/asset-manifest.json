@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/Math-Editor/static/css/main.e91e1abf.chunk.css",
-    "main.js": "/Math-Editor/static/js/main.3ef0fbe0.chunk.js",
-    "main.js.map": "/Math-Editor/static/js/main.3ef0fbe0.chunk.js.map",
+    "main.js": "/Math-Editor/static/js/main.1ca8609c.chunk.js",
+    "main.js.map": "/Math-Editor/static/js/main.1ca8609c.chunk.js.map",
     "runtime-main.js": "/Math-Editor/static/js/runtime-main.f68ecb75.js",
     "runtime-main.js.map": "/Math-Editor/static/js/runtime-main.f68ecb75.js.map",
     "static/js/2.20c9a240.chunk.js": "/Math-Editor/static/js/2.20c9a240.chunk.js",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.f68ecb75.js",
     "static/js/2.20c9a240.chunk.js",
     "static/css/main.e91e1abf.chunk.css",
-    "static/js/main.3ef0fbe0.chunk.js"
+    "static/js/main.1ca8609c.chunk.js"
   ]
 }

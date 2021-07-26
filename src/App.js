@@ -201,6 +201,9 @@ function App() {
   // Load previous text from memory
   useEffect(() => {
     let val = localStorage.getItem("html");
+    if (!val)
+      return;
+
     setTextValue(val);
 
     line_repl.forEach(i => {

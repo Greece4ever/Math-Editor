@@ -245,7 +245,7 @@ function App() {
 
   return (
     <div className="App">
-      <div style={{display: hidden ? "none" : "auto"}}>
+      <div style={{display: hidden ? "none" : ""}}>
 
       <div style={{
         width: "100%",

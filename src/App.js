@@ -112,9 +112,6 @@ let Latex = [
   [/([A-Za-z]|[^\x00-\x7F])(\d)/g, "$1_$2"],
   ["<-", "\\leftarrow"],
   ["->", "\\rightarrow"],
-
-
-  // [/x(\d)/g, "x_$1"]
 ]
 
 function replaceMath(str, ptrn="$$") {

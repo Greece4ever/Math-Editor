@@ -1,5 +1,6 @@
 {
   "name": "my-app",
+  "homepage": "https://greece4ever.github.io/Math-Editor/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

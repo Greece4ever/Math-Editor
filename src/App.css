@@ -11,8 +11,8 @@
 }
 
 *:focus {
-  outline: none !important;
-  border:1px solid red;
+  outline: #3f51b5 !important;
+  /* border:1px solid red; */
 }
 
 .center {
@@ -21,3 +21,27 @@
   margin: 0 auto;
 }
   
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: white; 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #3f51b59e; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f51b5; 
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Raleway:wght@100&display=swap');
+
+textarea {
+  
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-weight: 500;
+}

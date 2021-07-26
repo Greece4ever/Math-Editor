@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import Parser from "html-react-parser";
 import katex from "katex";
 import convertFraction, { insert_at, splitAtRange } from "./components/parsing";
 import html2canvas from 'html2canvas';
@@ -10,12 +9,24 @@ import FunctionsIcon from '@material-ui/icons/Functions';
 
 import "./App.css";
 
+import useInterval from "./components/hooks";
+
 import Fab from '@material-ui/core/Fab';
 
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import Grid from '@material-ui/core/Grid';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
+
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -99,6 +110,9 @@ let Latex = [
   ["sqrt", "\\sqrt"],
   ["!=", "\\neq"],
   [/([A-Za-z]|[^\x00-\x7F])(\d)/g, "$1_$2"],
+  ["<-", "\\leftarrow"],
+  ["->", "\\rightarrow"],
+
 
   // [/x(\d)/g, "x_$1"]
 ]
@@ -154,22 +168,6 @@ function replaceMathCenter(str, ptrn="$$") {
   return str;
 }
 
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    let id = setInterval(() => {
-      savedCallback.current();
-    }, delay);
-    return () => clearInterval(id);
-  }, [delay]);
-}
 
 
 
@@ -203,6 +201,7 @@ function App() {
 
   const [animation, setAnimation] = useState("spin 8s linear infinite");
 
+  // Load previous text from memory
   useEffect(() => {
     let val = localStorage.getItem("html");
     setTextValue(val);
@@ -223,6 +222,7 @@ function App() {
   }, [])
 
 
+  // Print End Listener
   useEffect(() => {
     const onPrintEnd = (event) => {
       setHidden(false);
@@ -235,11 +235,15 @@ function App() {
     }
   }, []);
 
+
+  // Print when hit PRINT .PDF
   useEffect(() => {
     if (hidden) {
       window.print();
     }
   }, [hidden])
+
+  const [val, setVal] = useState(0);
 
 
 
@@ -308,6 +312,7 @@ function App() {
           setHidden(true);
           setValue2(value);
           localStorage.setItem("html", textValue);
+           
         
         }} 
         
@@ -321,6 +326,20 @@ function App() {
 
 
       </div>
+
+
+
+    <AppBar position="static">
+      <Tabs TabIndicatorProps={{style: {background:'white'}}} value={val} onChange={(e) => console.log(e)} aria-label="simple tabs example">
+        {/* <Tab onClick={() => setVal(0)} label="Untitled"  /> */}
+        {/* <Tab onClick={() => setVal(1)} label="Untitled2"  /> */}
+
+        {/* <Button variant="primary">
+          <AddIcon style={{width: "16px", height: "16px", color: "white"}} />
+        </Button> */}
+      </Tabs>
+    </AppBar>
+
 
       <Grid container spacing={3}>
         <Grid item xs={6}>

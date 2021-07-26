@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Parser from "html-react-parser";
 import katex from "katex";
 import convertFraction, { insert_at, splitAtRange } from "./components/parsing";
@@ -6,16 +6,18 @@ import html2canvas from 'html2canvas';
 
 
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import FunctionsIcon from '@material-ui/icons/Functions';
 
 import "./App.css";
 
 import Fab from '@material-ui/core/Fab';
-import GitHubIcon from '@material-ui/icons/GitHub';
+
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import Grid from '@material-ui/core/Grid';
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     background: '#3b3939',
     border: 0,
@@ -25,7 +27,14 @@ const useStyles = makeStyles({
     height: 48,
     padding: '0 30px',
   },
-});
+
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+
+}));
 
 
 
@@ -145,15 +154,34 @@ function replaceMathCenter(str, ptrn="$$") {
   return str;
 }
 
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    let id = setInterval(() => {
+      savedCallback.current();
+    }, delay);
+    return () => clearInterval(id);
+  }, [delay]);
+}
+
 
 
 function App() {
-  const [value, setValue] = useState("");  
+  const [textValue, setTextValue] = useState("");
+  const [value, setValue]   = useState("");  
+  const [value2, setValue2] = useState("");
   const repl = [
-    ["**", "b"],
-    ["*_", "i"],
-    ["\n\n", "p"],
-    ["```", "pre"]
+    ["**", "b", "Bold"],
+    ["*_", "i", "Italic"],
+    ["\n\n", "p", ""],
+    ["```", "pre", "Code"]
   ]
 
 
@@ -162,19 +190,66 @@ function App() {
     ['-', "ul"]
 
   ]
+
+  useInterval(() => {
+    localStorage.setItem("html", textValue)
+  }, 15 * 1000);
   
   const [buffer, setBuffer] = useState("");
 
   const classes = useStyles();
 
+  const [hidden, setHidden] = useState(false);
+
+  const [animation, setAnimation] = useState("spin 8s linear infinite");
+
+  useEffect(() => {
+    let val = localStorage.getItem("html");
+    setTextValue(val);
+
+    line_repl.forEach(i => {
+      val = line_replace(val, "\n" +i[0], "\n", i[1])
+    })
+
+    repl.forEach(i => {
+      val = fnd(val, i[0], i[1]);
+    })
+
+    val = replaceMathCenter(val, "$$");
+    val = replaceMath(val, "@@");
+
+    setValue(val);
+
+  }, [])
+
+
+  useEffect(() => {
+    const onPrintEnd = (event) => {
+      setHidden(false);
+    }
+      
+    window.addEventListener("afterprint", onPrintEnd);
+    
+    return () => {
+      window.removeEventListener('afterprint', onPrintEnd);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (hidden) {
+      window.print();
+    }
+  }, [hidden])
+
+
 
   return (
     <div className="App">
-      <div>
+      <div style={{display: hidden ? "none" : "auto"}}>
 
       <div style={{
         width: "100%",
-        height: "400px",
+        height: "200px",
         backgroundColor: "#393838",
         display: "flex",
         justifyContent: "center",
@@ -199,9 +274,6 @@ function App() {
             width:  "64px",
             height: "64px",
             color: "rgb(57, 56, 56)"
-
-    
-
           }}/>  
             
           </div>          
@@ -212,28 +284,63 @@ function App() {
         </h2>
 
 
-        <Fab style={{position: "absolute", marginRight: "10px", marginBottom: "10px", right: 0, bottom: 0}} color="inherit" aria-label="add">
-          <GitHubIcon />
+        <Fab 
+        onClick={() => {
+          html2canvas(document.getElementById("peos").parentElement ).then(canvas => {
+            var link = document.createElement("a");
+            link.setAttribute('download', `math${Math.random().toString().split(".")[1]}.png`);
+            link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
+            link.click();          
+          })
+        }} 
+        
+        style={{position: "absolute", marginRight: "10px", marginBottom: "10px", right: 0, bottom: 0}} variant="extended" color="inherit" aria-label="add">
+          <SaveAltIcon style={{"animation" : "none"}} />
+          <span style={{marginLeft: "10px", fontWeight: "700", fontFamily: "math"}}>
+            SAVE .PNG
+          </span>
         </Fab>
+
+
+
+        <Fab 
+        onClick={() => {
+          setHidden(true);
+          setValue2(value);
+          localStorage.setItem("html", textValue);
+        
+        }} 
+        
+        style={{position: "absolute", marginLeft: "10px", marginBottom: "10px", left: 0, bottom: 0}} variant="extended" color="inherit" aria-label="add">
+          <PictureAsPdfIcon style={{"animation" : "none"}} />
+          <span style={{marginLeft: "10px", fontWeight: "700", fontFamily: "math"}}>
+            PRINT .PDF
+          </span>
+        </Fab>
+
 
 
       </div>
 
-
-
-      <textarea
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+        <textarea
+        value={textValue}
       style={{
-        "width" : "50%",
+        "width" : "100%",
         height : "500px",
         fontSize: "13px",
         resize: "vertical",
         float: "left",
-        border: "1px solid red"
+        // border: "1px solid rgb(57, 56, 56)",
+        // fontSize: "20px"
+        
       }}
       
       onChange={(e) => {
         
         let val = e.currentTarget.value;
+        setTextValue(val);
 
         // ([A-Za-z]|[^\x00-\x7F])(\d)
         line_repl.forEach(i => {
@@ -246,8 +353,7 @@ function App() {
 
         val = replaceMathCenter(val, "$$");
         val = replaceMath(val, "@@");
-        // val
-        //val = `<div class="center">${val}</div>`
+
         setValue(val);
         
       }}
@@ -267,21 +373,37 @@ function App() {
 
       }}></textarea>
 
-      
+        </Grid>
+        <Grid item xs={6}>
+          <div id="peos" style={{
+            width: "100%",
+            background: "white",
+            float: "right",
+            marginTop: " 10px",
+            fontFamily: "math",
+            minHeight: "800px",
+            margin: "10px",
+            overflowWrap: "break-word",
+    
 
-      <div style={{
-        width: "48%",
-        background: "white",
-        float: "right",
-        marginTop: " 10px",
-        fontFamily: "math"
-        
-      }}
-      dangerouslySetInnerHTML={{__html: value}}
-      >
-          {/* {Parser(value)} */}
-      </div>
+            
+          }}
+          dangerouslySetInnerHTML={{__html: value}}
+          ></div>
+        </Grid>
+      </Grid>
+
       
+      </div>
+
+
+      <div id="NOTICEME" style={{display: hidden ? "block" : "none", fontFamily: "math", margin: "10px"}}
+      
+      
+      
+      dangerouslySetInnerHTML={{__html: value2}}
+      >
+        
       </div>
 
     </div>

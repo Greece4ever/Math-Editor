@@ -1,6 +1,6 @@
-## Math Editor ([demo](https://i.imgur.com/F9g7x4R.png))
+## Math Editor ([demo](https://greece4ever.github.io/Math-Editor/))
 
-![img](https://i.imgur.com/Wa1zsKH.png)
+![img](https://i.imgur.com/F9g7x4R.png)
 
 Simple markdown editor that makes writting Latex math easier. it replaces each symbol on the table with it's corresponding latex value on the left
 

@@ -24,14 +24,15 @@
 
 ::-webkit-scrollbar {
   width: 10px;
+  /* height: 100px;               */
 }
 
 ::-webkit-scrollbar-track {
-  background: white; 
+  background: #f1f1f1; 
 }
  
 ::-webkit-scrollbar-thumb {
-  background: #3f51b59e; 
+  background: #c1c1c1; 
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -45,3 +46,13 @@ textarea {
   font-family:Georgia, 'Times New Roman', Times, serif;
   font-weight: 500;
 }
+
+
+html,
+body {
+  height: 100% !important;
+  margin: 0 !important;
+  overflow: hidden;
+}
+
+

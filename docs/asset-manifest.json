@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/Math-Editor/static/css/main.3edadc4e.chunk.css",
+    "main.css": "/Math-Editor/static/css/main.d9375959.chunk.css",
     "main.js": "/Math-Editor/static/js/main.0370157d.chunk.js",
     "main.js.map": "/Math-Editor/static/js/main.0370157d.chunk.js.map",
     "runtime-main.js": "/Math-Editor/static/js/runtime-main.3e391ead.js",
@@ -10,14 +10,14 @@
     "static/js/3.e03293fb.chunk.js": "/Math-Editor/static/js/3.e03293fb.chunk.js",
     "static/js/3.e03293fb.chunk.js.map": "/Math-Editor/static/js/3.e03293fb.chunk.js.map",
     "index.html": "/Math-Editor/index.html",
-    "static/css/main.3edadc4e.chunk.css.map": "/Math-Editor/static/css/main.3edadc4e.chunk.css.map",
+    "static/css/main.d9375959.chunk.css.map": "/Math-Editor/static/css/main.d9375959.chunk.css.map",
     "static/js/2.f420692a.chunk.js.LICENSE.txt": "/Math-Editor/static/js/2.f420692a.chunk.js.LICENSE.txt",
     "static/media/index.css": "/Math-Editor/static/media/math2.d42d12cd.otf"
   },
   "entrypoints": [
     "static/js/runtime-main.3e391ead.js",
     "static/js/2.f420692a.chunk.js",
-    "static/css/main.3edadc4e.chunk.css",
+    "static/css/main.d9375959.chunk.css",
     "static/js/main.0370157d.chunk.js"
   ]
 }

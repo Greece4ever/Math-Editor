@@ -1,4 +1,4 @@
-## Math Editor ([demo](https://greece4ever.github.io/Math-Editor/))
+## Math Editor ([demo](https://i.imgur.com/F9g7x4R.png)
 
 ![img](https://i.imgur.com/Wa1zsKH.png)
 

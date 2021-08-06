@@ -47,7 +47,7 @@ export function renderMarkdown(val)
       // ([A-Za-z]|[^\x00-\x7F])(\d)
     line_repl.forEach(i => {
       // val = line_replace( /*"\n" +*/ val, "\n" +i[0], "\n", i[1])
-      val = __line_replace(val, i[0], i[1]);
+      val = __line_replace(val, i[0], i[1], i[2]);
 
       // val = val.replace("\n", "");      
     })

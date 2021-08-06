@@ -11,12 +11,28 @@ export let Latex = [
     ["->", "\\rightarrow"],
   ]
 
+
+  function hdrs() {
+    let arr = [];
+    for (let i=1; i <= 4; i++) {
+      arr.push([m("#", i), `<h${i}>`, `</h${i}><hr></hr>`]);
+    }
+    arr.reverse();
+    return arr;
+  }
+
   
 export const line_repl = [
     // ...hdrs(),
-    ['-', "ul"],
-    ['>', "blockquote"],
+    ["##", "<h3>", "</h3><hr></hr>"],
+    ["#", "<h2>", "</h2><hr></hr>"],
+
+
+    ['-', "<ul>", "</ul>"],
+    ['>', "<blockquote><ul>", "</ul></blockquote>"],
 ]
+
+
 
 
 export const repl = [
@@ -76,19 +92,18 @@ export function line_replace(str, pttr0, pttrn1, rpl) {
     return str;
 }
 
-export function __line_replace(string, symbol, html_tag)
+export function __line_replace(string, symbol, open_tag, close_tag)
 {
     let $symbol = `\n${symbol}`;    
     let str1 = "";  // part of string that has been dealth with
     let str0 = string; // rest of string we are dealing with
 
-    let len = html_tag.length + 2;
+    let len = open_tag.length;
 
     if (str0[0] == symbol)
     {
-        str0 = str0.replace(symbol, `<${html_tag}>`);
-        str0 = str0.replace("\n", `</${html_tag}>\n`);
-        
+        str0 = str0.replace(symbol, `${open_tag}`);
+        str0 = str0.replace("\n",   `${close_tag}\n`);
     }
 
 
@@ -96,18 +111,15 @@ export function __line_replace(string, symbol, html_tag)
 
     while (i !== -1)
     {
-        // \n-
-        // <li>
-        str0 = str0.replace($symbol, `\n<${html_tag}>`);
+        str0 = str0.replace($symbol, `\n${open_tag}`);
 
         let _ = removeAtRanges(str0, 0, i  + len);
         
         str1 += _[0];
         str0 = _[1];
 
-        str0 = str0.replace("\n", `</${html_tag}>\n`);
+        str0 = str0.replace("\n", `${close_tag}\n`);
         
-        // debugger;
         i = str0.indexOf($symbol);
     };
 
@@ -117,36 +129,10 @@ export function __line_replace(string, symbol, html_tag)
 }
 
 
-let ___DO_NOT_USE = `
-
-> Η ελλάς φλέγεται
--δσα
--δσαδσα
--δσα
-
-
-`.trim();
-
-//console.log( line_replace(___DO_NOT_USE, "\n" + "-", "\n", "li"));
-
-___DO_NOT_USE = __line_replace(___DO_NOT_USE, "-", "ul");
-console.log( ___DO_NOT_USE );
-console.log( __line_replace(___DO_NOT_USE, ">", "h1") );
-
-  
-
 export function findInside(str, match) {
     let i = str.indexOf(match); str = str.replace(match, ' ');
     let j = str.indexOf(match); str = str.replace(match, ' ');
     return [i, j == -1 ? str.length : j, str];
 }
 
-function hdrs() {
-    let arr = [];
-    for (let i=1; i <= 4; i++) {
-      arr.push([m("#", i), `h${i}`]);
-    }
-    arr.reverse();
-    return arr;
-  }
   

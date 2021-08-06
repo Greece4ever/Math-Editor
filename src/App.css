@@ -69,6 +69,8 @@ blockquote {
   padding: 0.5em 10px;
   quotes: "\201C""\201D""\2018""\2019";
   word-wrap: break-word;
+  /* margin-top: 2px; */
+  
 }
 
 ul {
@@ -84,4 +86,21 @@ blockquote:before {
 }
 blockquote p {
   display: inline;
+}
+
+
+h1 {
+  margin: 0;
+}
+
+h2 {
+  margin: 0;
+}
+
+h3 {
+  margin: 0;
+}
+
+h4 {
+  margin: 0;
 }

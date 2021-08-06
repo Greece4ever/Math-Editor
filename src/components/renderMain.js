@@ -1,6 +1,6 @@
 import katex from "katex";
 import convertFraction, { insert_at, splitAtRange } from "./parsing";
-import {Latex, line_repl, repl, m, fnd, removeAtRange, line_replace, findInside} from './replace'
+import {Latex, line_repl, repl, m, fnd, removeAtRange, __line_replace, line_replace, findInside} from './replace'
 
 function replaceMath(str, ptrn="$$") {
     let ind = findInside(str, ptrn); // Find where it starts and ends 
@@ -26,7 +26,7 @@ function replaceMath(str, ptrn="$$") {
     }
     return str;
 }
-  
+
 
 // convert math string e.g `x/5` to latex `\frac{x}{5}`
 export function convertLatex(sub_str)
@@ -46,7 +46,8 @@ export function renderMarkdown(val)
   {
       // ([A-Za-z]|[^\x00-\x7F])(\d)
     line_repl.forEach(i => {
-      val = line_replace( /*"\n" +*/ val, "\n" +i[0], "\n", i[1])
+      // val = line_replace( /*"\n" +*/ val, "\n" +i[0], "\n", i[1])
+      val = __line_replace(val, i[0], i[1]);
 
       // val = val.replace("\n", "");      
     })

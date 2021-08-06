@@ -17,3 +17,19 @@ export default function useInterval(callback, delay) {
     }, [delay]);
 }
   
+
+export function useEffectAllDepsChange(fn, deps) {
+  const [changeTarget, setChangeTarget] = useState(deps);
+
+  useEffect(() => {
+    setChangeTarget(prev => {
+      if (prev.every((dep, i) => dep !== deps[i])) {
+        return deps;
+      }
+
+      return prev;
+    });
+  }, [deps]);
+
+  useEffect(fn, changeTarget);
+}

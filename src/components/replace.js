@@ -24,7 +24,7 @@ export const repl = [
     ["*_", "i", "Italic"],
     ["\n\n", "p", ""],
     ["```", "pre", "Code"],
-    ["&&", "center", ""]
+    ["@@", "center", "Centered Text"]
 ]
 
 

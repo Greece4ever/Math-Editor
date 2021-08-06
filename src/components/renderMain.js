@@ -25,33 +25,22 @@ function replaceMath(str, ptrn="$$") {
       ind = findInside(str, ptrn);
     }
     return str;
-  }
+}
   
+
+// convert math string e.g `x/5` to latex `\frac{x}{5}`
+export function convertLatex(sub_str)
+{
+  Latex.forEach(symbol => {
+    sub_str = sub_str.replaceAll(symbol[0], symbol[1])
+  });
   
-function replaceMathCenter(str, ptrn="$$") {
-    let ind = findInside(str, ptrn); // Find where it starts and ends 
-    let sub_str;
-    while (ind[0] != -1) {
-      str= ind[2]; // End
-      sub_str = removeAtRange(str, ind[0], ind[1]); // math string
-      str = splitAtRange(str, ind[0], ind[1]); // rest of the string
-      Latex.forEach(symbol => {
-        sub_str = sub_str.replaceAll(symbol[0], symbol[1])
-      });
-      
-      try {
-        sub_str = convertFraction(sub_str);
-      } catch(e) {};
-  
-      let html = katex.renderToString(sub_str, {throwOnError: false});
-  
-      html = `<div class="center">${html}</div>`
-  
-      str = insert_at(str, html, ind[0]);
-      ind = findInside(str, ptrn);
-    }
-    return str;
-  }
+  try {
+    sub_str = convertFraction(sub_str);
+  } catch(e) {};
+
+  return katex.renderToString(sub_str, {throwOnError: false});
+};
   
 export function renderMarkdown(val)
   {
@@ -66,9 +55,41 @@ export function renderMarkdown(val)
       val = fnd(val, i[0], i[1]);
     })
 
-    val = replaceMathCenter(val, "$$");
-    val = replaceMath(val, "@@");
+
+    // val = replaceMath(val, "$$");
   
     return val;
   }
-  
+
+
+export function findAllMath(str, ptrn="$$", className="math") {
+  let ind = findInside(str, ptrn); // Find where it starts and ends 
+  let sub_str;
+
+  let math_strings = [];
+
+  while (ind[0] != -1) {
+    str= ind[2]; // End
+    sub_str = removeAtRange(str, ind[0], ind[1]); // math string
+    str = splitAtRange(str, ind[0], ind[1]); // rest of the string
+
+    math_strings.push(sub_str);
+
+    let html = `<span class="${className}"></span>`
+
+
+    str = insert_at(str, html, ind[0]);
+    ind = findInside(str, ptrn);
+  }
+
+  return [str, math_strings];
+}
+
+
+
+console.log(findAllMath(`
+**ΝΟΜΟΣ 1** Σε κάθε άξονα, κάθε σώμα, που η συνισταμένη δύναμη του σε εκείνον τον άξονα $$F_{net}$$ είναι 0, κινείτε με σταθερή ταχύτητα ή μένει ακίνητο.
+
+ @@ $$ F_{net}=ma= 0 => (du)/(dt)=0 => u=ct $$ &nbsp;	 ή &nbsp;	 $$u=0$$  @@
+`.trim() ));
+

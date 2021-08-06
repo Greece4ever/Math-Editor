@@ -3,13 +3,13 @@ import React, { useEffect, useState, useRef } from "react";
 
 // import convertFraction, { insert_at, splitAtRange } from "./components/parsing";
 // import {Latex, line_repl, repl, m, fnd, removeAtRange, line_replace, findInside} from './components/replace'
-import {renderMarkdown} from './components/renderMain';
+import {renderMarkdown, findAllMath, convertLatex} from './components/renderMain';
 
 import html2canvas from 'html2canvas';
 
 import "./App.css";
 
-import useInterval from "./components/hooks";
+import useInterval, {useEffectAllDepsChange} from "./components/hooks";
 
 import Fab from '@material-ui/core/Fab';
 
@@ -33,7 +33,7 @@ import ImageIcon from '@material-ui/icons/Image';
 
 function App() {
   const [textValue, setTextValue] = useState("");
-  const [value, setValue]   = useState("");  
+  const [value, setValue]   = useState([""]);  
   const [value2, setValue2] = useState("");
 
 
@@ -137,14 +137,44 @@ function App() {
     }
   }, [])
 
+  
+  const [mathSymbols, setMathSymbols] = useState();
+
+  const __render = (val) => {
+    let [str, math_symbols] = findAllMath(val, "$$", "leonidas");
+
+    setValue( [ renderMarkdown(str) ] );
+    setMathSymbols(math_symbols);
+  }
+
+  // change between 1 render or multiple renders
+  useEffectAllDepsChange(() => {
+
+
+    let elms = document.getElementsByClassName("leonidas");
+    for (let i=0; i < elms.length; i++)
+    {
+
+
+      elms[i].innerHTML = convertLatex(mathSymbols[i]);
+    }
+
+  
+  }, [value, mathSymbols]);
+
+  // useEffect(() => {
+    
+
+  // }, [value])
+
 
   const handleChange = e => {
     let val = e;
     setTextValue(val);
 
-    val = renderMarkdown(val);
-
-    setValue(val);
+    __render(val);
+    // val = renderMarkdown(val);
+    // setValue(val);
   }
 
   const savePDF = () => {
@@ -234,7 +264,7 @@ function App() {
             overflow: "auto"
           }}
 
-          dangerouslySetInnerHTML={{__html: value}}></div>
+          dangerouslySetInnerHTML={{__html: value[0] }}></div>
         </Grid>
       </Grid>
       </div>

@@ -200,8 +200,8 @@ function App() {
 
   return (
     <div className="App">
-      
-      <HelpDialog open={dialogOpen} />
+
+      <HelpDialog open={dialogOpen} setOpen={setDialogOpen} />
 
       <div style={{display: hidden ? "none" : ""}}>
 

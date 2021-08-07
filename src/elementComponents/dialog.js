@@ -1,4 +1,4 @@
-import { Dialog } from "@material-ui/core";
+import { Dialog, LinearProgress } from "@material-ui/core";
 import React, { useState } from "react";
 
 
@@ -6,26 +6,19 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Table from '@material-ui/core/TableRow';
 
-import { Grid } from "@material-ui/core";
+import { Latex, repl, line_repl } from "../components/replace";
+import { convertLatex, convertLinks } from "../components/renderMain"
 
-
-import { Latex } from "../components/replace";
-import { convertLatex } from "../components/renderMain"
-import Paper from '@material-ui/core/Paper';
-import { Box } from "@material-ui/core";
 
 import SimpleTable from './table';
+import HelpIcon from '@material-ui/icons/Help';
+
 
 function convertDict(latex_array)
 {
     let obj = [];
+    obj.push({"first": convertLatex("(1)/(4πε0)"), "second": "(1)/(4πε0)", "third": "Fraction (a)/(b) is converted to \\frac{a}{b}" });
     for (let i=0; i < latex_array.length; i++)
     {
         let dict;
@@ -41,106 +34,96 @@ function convertDict(latex_array)
         obj.push(dict);
 
     }
+
     return obj;
 }
+
+
+function convertDict2(html_array, line_arr, word="Math")
+{
+    let arr = [ ];
+
+    let page = "https://github.com/Greece4ever";
+    let _link = `[${word}](${page})`;
+    
+    arr.push({first: convertLinks(_link), second: _link, third: "Link" })
+
+    arr.push({first: convertLatex("x^2 = -1"), second: "$$ x^2 = - 1 $$", third: "Use $$ to write math" })
+
+    for (let i=0; i < html_array.length; i++)
+    {
+        let obj = {};
+        let tag  = html_array[i][1];
+        let mdown = html_array[i][0];
+        
+        if (!tag === "pre")
+            obj.first   = `<${tag}>${word}</${tag}>`;
+        else
+            obj.first   = `<${tag}><span>${word}</span></${tag}>`;
+
+        obj.second  = `${mdown}${word}${mdown}`;
+        obj.third   =  html_array[i][2]
+
+        arr.push(obj);
+    }
+
+    for (let i=0; i < line_arr.length; i++)
+    {
+        let obj = {};
+
+        obj.first  = line_arr[i][1] + word + line_arr[i][2];
+        obj.second = line_arr[i][0] + word
+        obj.third = line_arr[i][3]
+
+        arr.push(obj);
+    }
+    
+
+    return arr;
+}
+
 
 
 
 const HelpDialog = (props) => {
 
     const [latexTable, setLatexTable] = useState(convertDict(Latex));
+    const [htmlTable, setHtmlTable]   = useState(convertDict2(repl, line_repl));
 
     return (
-        <Dialog  maxWidth={"xl"}  open={props.open}>
+        <Dialog onClose={() => props.setOpen(false)} className={"XAXAXAXA"}  maxWidth={"xl"}  open={props.open}>
 
-            <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-                <DialogContent>
-                <DialogContentText>
-                    To subscribe to this website, please enter your email address here. We will send updates
-                    occasionally.
-                </DialogContentText>
+            <DialogTitle style={{background: "radial-gradient(#acacac, transparent)"}}>
+                <div style={{    display: 'flex',    alignItems: 'center',    flexWrap: 'wrap',}}>
+                    <HelpIcon style={{width: "24x", height: "24px"}} />
+                    <span style={{marginLeft: "5px"}}>Formatting help</span>
+                </div>
+            </DialogTitle>
+                <DialogContent className={"PEOSPEOSPEOS"}>
+                <DialogContentText style={{wordWrap: "break-word"}}>
+                    Below you can find 2 tables
+                    <ul> 1. <a href="" onClick={(e) => {
+                        e.preventDefault();
+                        document.getElementsByClassName("PEOSPEOSPEOS")[0].scrollTop += document.getElementById("table0").getBoundingClientRect().top - 100;
+                        } }>Latex</a>: Symbols are replaced only when inside $$ $$, (e.g $$ >= $$ )</ul>
 
-            {/* 
-            <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-                <DialogContent>
-                <DialogContentText>
-                    To subscribe to this website, please enter your email address here. We will send updates
-                    occasionally.
-                </DialogContentText>
+                    <ul> 2. <a href="#" onClick={e => {
+                        e.preventDefault();
+                        document.getElementsByClassName("PEOSPEOSPEOS")[0].scrollTop += document.getElementById("table1").getBoundingClientRect().top - 100;
 
-                <Grid  style={{width: "50%", float: "left"}}>
-                <TableContainer component={Paper}>
-
-                    <Table >
-
-
-                    <TableHead>
-                        <TableRow>
-                            <TableCell >Latex Symbol</TableCell>
-                            <TableCell align="right">Markdown Symbol</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {latexTable.map( (row) => 
-                        <TableRow>
-                        <TableCell dangerouslySetInnerHTML={{__html: row.latex }} component="th" scope="row">
-                            
-                        </TableCell>
-                        <TableCell align="right">{row.markdown}</TableCell>
-
-                        </TableRow>
-
-                    )}                    
-
-                    </TableBody>
-                    </Table>
-                </TableContainer>
-
-                </Grid>
-
-                <Grid  style={{width: "50%", float: "right"}}>
-                <TableContainer component={Paper}>
+                        
+                    }}>HTML</a> are replaced everywhere but inside $$ (math) and ``` (code)</ul>
                     
+                    You type the symbols in the <b>markdown</b> tab, then they output whatever is in the other tab
 
-                    <Table>
-
-                    <TableHead>
-
-                        <TableRow hover={true}>
-                            <TableCell>Latex Symbols</TableCell>
-                            <TableCell>Markdown Symbols</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-
-                        <TableRow   hover={true}>
-                            <TableCell >Latex Symbols</TableCell>
-                            <TableCell   >Markdown Symbols</TableCell>
-                        </TableRow>
-
-
-
-                    {latexTable.map( (row) => 
-                        <TableRow>
-                            <TableCell  dangerouslySetInnerHTML={{__html: row.latex }} component="th" scope="row"></TableCell>
-                            <TableCell   scope="row" align="right">{row.markdown}</TableCell>
-                        </TableRow>
-
-                    )}   
-
-
-                    </TableBody>
-                    </Table>
-                </TableContainer>
-
-                </Grid>
-
-
-
-            </DialogContent> */}
+                </DialogContentText>
             
 
-            <SimpleTable  first={"Latex"} second={"Markdown"} table={latexTable}></SimpleTable>
+            <SimpleTable id={"table0"} first={"Latex"} second={"Markdown"} table={latexTable}></SimpleTable>
+
+            <SimpleTable id={"table1"} first={"HTML"} second={"Markdown"} table={htmlTable}></SimpleTable>
+
+
             </DialogContent>
 
 

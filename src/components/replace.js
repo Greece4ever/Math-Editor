@@ -17,17 +17,15 @@ export let Latex = [
 
   
 export const line_repl = [
-    ["#", "<h2>", "</h2><hr></hr>"],
-
-
-    ['-', "<ul>", "</ul>"],
-    ['>', "<blockquote><ul>", "</ul></blockquote>"],
+    ["#", "<h2>", "</h2><hr></hr>", "Large text with underline"],
+    ['-', "<ul>", "</ul>", "Text with left padding"],
+    ['>', "<blockquote><ul>", "</ul></blockquote>", "bloquote"],
 ]
 
 export const repl = [
     ["**", "b", "Bold"],
     ["*_", "i", "Italic"],
-    ["\n\n", "p", ""],
+    // ["\n\n", "p", ""],
     ["```", "pre", "Code"],
     ["@@", "center", "Centered Text"],
     ["__", "sup", "Superscript"],

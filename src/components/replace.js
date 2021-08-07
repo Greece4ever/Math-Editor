@@ -1,17 +1,17 @@
 import { insert_at } from "./parsing";
 
 export let Latex = [
-    ['>=', "\\ge"],
-    ["<=>", " \\iff "],
-    ['<=', "\\le"],
-    ['=>', "\\implies"],
-    ["+-", "\\pm"],
-    ["sqrt", "\\sqrt"],
-    ["!=", "\\neq"],
-    [/([A-Za-z]|[^\x00-\x7F])(\d)/g, "$1_$2"],
-    ["<-", "\\leftarrow"],
-    ["->", "\\rightarrow"],
-    ["*", "\\cdot"]
+    ['>=', "\\ge",       "Greater than/equal"],
+    ["<=>", " \\iff " ,  "If and only if"],
+    ['<=', "\\le",       "Less than/equal"],
+    ['=>', "\\implies",  "Implies"],
+    ["+-", "\\pm",       "Plus/Minus"],
+    ["sqrt", "\\sqrt",   "Square root, replace x with anything"],
+    ["!=", "\\neq",      "Not equal"],
+    [/([A-Za-z]|[^\x00-\x7F])(\d)/g, "$1_$2", "Subscript, Replace x with any letter and 0 with any number"],
+    ["<-", "\\leftarrow", "Leftarrow"],
+    ["->", "\\rightarrow","Rightarrow"],
+    ["*", "\\cdot",        "Centered dot"]
   ]
 
 

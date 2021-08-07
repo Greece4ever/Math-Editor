@@ -29,6 +29,10 @@ import "ace-builds/src-noconflict/ext-language_tools"
 
 
 import ImageIcon from '@material-ui/icons/Image';
+import HelpIcon from '@material-ui/icons/Help';
+
+// import Dialog from '@material-ui/core/Dialog';
+import HelpDialog from './elementComponents/dialog'
 
 
 function App() {
@@ -192,9 +196,12 @@ function App() {
 
   }
 
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
     <div className="App">
+      
+      <HelpDialog open={dialogOpen} />
 
       <div style={{display: hidden ? "none" : ""}}>
 
@@ -228,6 +235,10 @@ function App() {
         <Fab onClick={() => savePNG()} style={{marginBottom: "10px", marginRight: "10px"}} color="primary" aria-label="add">
           <ImageIcon />
         </Fab>
+
+      <Fab onClick={e => setDialogOpen(true)} style={{marginBottom: "10px", marginRight: "10px"}} color="contained" aria-label="add" >
+        <HelpIcon />
+      </Fab>
       </div>
 
 

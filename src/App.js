@@ -33,6 +33,17 @@ import HelpIcon from '@material-ui/icons/Help';
 
 // import Dialog from '@material-ui/core/Dialog';
 import HelpDialog from './elementComponents/dialog'
+import domtoimage from 'dom-to-image';
+import { saveAs } from 'file-saver';
+
+
+import {
+  enable as enableDarkMode,
+  disable as disableDarkMode,
+  auto as followSystemColorScheme,
+  exportGeneratedCSS as collectCSS,
+  isEnabled as isDarkReaderEnabled
+} from 'darkreader';
 
 
 function App() {
@@ -41,6 +52,14 @@ function App() {
   const [value2, setValue2] = useState("");
 
 
+  // useEffect(() => {
+  //   enableDarkMode({
+  //     brightness: 100,
+  //     contrast: 90,
+  //     sepia: 10,
+  // });
+  
+  // }, [])
 
   useInterval(() => {
     localStorage.setItem("html", textValue)
@@ -96,13 +115,18 @@ function App() {
       console.log(document.getElementById("NOTICEME").getAttribute("val"));
       if (document.getElementById("NOTICEME").getAttribute("val") == "1")
       {
-        html2canvas(document.getElementById("NOTICEME") ).then(canvas => {
-          var link = document.createElement("a");
-          link.setAttribute('download', `math${Math.random().toString().split(".")[1]}.png`);
-          link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-          link.click();     
-          setHidden(false);    
+        domtoimage.toPng(document.getElementById("NOTICEME")).then(blob => {
+          saveAs(blob, `math${Math.random()}.png`)
         })
+
+        // html2canvas(document.getElementById("NOTICEME") ).then(canvas => {
+        //   var link = document.createElement("a");
+        //   link.setAttribute('download', `math${Math.random().toString().split(".")[1]}.png`);
+        //   link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
+        //   link.click();     
+        //   setHidden(false);    
+        // })
+
       }
       else {
         window.print();
@@ -143,14 +167,51 @@ function App() {
 
   
   const [mathSymbols, setMathSymbols] = useState();
+  const [codeSymbols, setCodeSymbols] = useState();
 
   const __render = (val) => {
 
+    let code_symbols;
+    [val, code_symbols] = findAllMath(val, "```", "kostas", "pre");
     let [str, math_symbols] = findAllMath(val, "$$", "leonidas");
 
     setValue( [ renderMarkdown(str) ] );
-    setMathSymbols(math_symbols);
+    setMathSymbols(math_symbols)
+    setCodeSymbols( code_symbols )
   }
+
+  const addLineNumbers = (codeString) =>
+  {
+    let q= codeString.split("\n");
+    let d = [];
+    for (let i=0; i < q.length; i++)
+    {
+      let c = document.createElement("span");
+      c.innerText = q[i];
+      d.push(c);
+    }
+    return d;
+  }
+  
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      let elms = document.getElementsByClassName("kostas");
+      for (let i=0; i < elms.length; i++)
+      {
+        let elms2 = addLineNumbers(elms[i].innerText);
+        elms[i].innerText = "";
+        for (let k=0; k < elms2.length; k++)
+        {
+          elms[i].appendChild(elms2[k]);
+          elms[i].innerHTML += "\n";
+        }
+      }
+      
+    }, 1000)
+
+    return () => clearTimeout(timeout);
+  }, [textValue])
 
   // change between 1 render or multiple renders
   useEffectAllDepsChange(() => {
@@ -161,9 +222,25 @@ function App() {
     {
       elms[i].innerHTML = convertLatex(mathSymbols[i]);
     }
+    elms = document.getElementsByClassName("kostas");
+
+    for (let i=0; i < elms.length; i++)
+    {
+      elms[i].innerText = codeSymbols[i].trim();
+      // elms[i].innerText = addLineNumbers(codeSymbols[i].trim());
+      // let elms_2 = addLineNumbers(codeSymbols[i].trim());;
+      // console.log(elms_2)
+      // for (let k=0; k < elms_2.length; k++)
+      // {
+        
+      //   elms[i].appendChild(elms_2[k]);
+      //   elms[i].innerHTML += "\n";
+      // }
+
+    }
 
   
-  }, [value, mathSymbols]);
+  }, [value, mathSymbols, codeSymbols]);
 
   // useEffect(() => {
     
@@ -173,12 +250,8 @@ function App() {
 
   const handleChange = e => {
     let val = e;
-
     setTextValue(val);
-
     __render(val);
-    // val = renderMarkdown(val);
-    // setValue(val);
   }
 
   const savePDF = () => {

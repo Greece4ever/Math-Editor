@@ -105,7 +105,7 @@ const HelpDialog = (props) => {
                     <ul> 1. <a href="" onClick={(e) => {
                         e.preventDefault();
                         document.getElementsByClassName("PEOSPEOSPEOS")[0].scrollTop += document.getElementById("table0").getBoundingClientRect().top - 100;
-                        } }>Latex</a>: Symbols are replaced only when inside $$ $$, (e.g $$ >= $$ )</ul>
+                        } }>Latex</a>: Symbols are replaced only when inside $$ $$, (e.g $$ &gt;= $$ )</ul>
 
                     <ul> 2. <a href="#" onClick={e => {
                         e.preventDefault();

@@ -1,32 +1,6 @@
 import katex from "katex";
 import convertFraction, { insert_at, splitAtRange } from "./parsing";
-import {Latex, line_repl, repl, m, fnd, removeAtRange, __line_replace, findLink, findInside} from './replace'
-
-function replaceMath(str, ptrn="$$") {
-    let ind = findInside(str, ptrn); // Find where it starts and ends 
-    let sub_str;
-    while (ind[0] != -1) {
-      str= ind[2]; // End
-      sub_str = removeAtRange(str, ind[0], ind[1]); // math string
-      str = splitAtRange(str, ind[0], ind[1]); // rest of the string
-      Latex.forEach(symbol => {
-        sub_str = sub_str.replaceAll(symbol[0], symbol[1])
-      });
-      
-      try {
-        sub_str = convertFraction(sub_str);
-      } catch(e) {};
-  
-      let html = katex.renderToString(sub_str, {throwOnError: false});
-  
-      // html = `<div class="center">${html}</div>`
-  
-      str = insert_at(str, html, ind[0]);
-      ind = findInside(str, ptrn);
-    }
-    return str;
-}
-
+import {Latex, line_repl, repl, m, fnd, removeAtRange, __line_replace, findLink, findInside, just_repl} from './replace'
 
 // convert math string e.g `x/5` to latex `\frac{x}{5}`
 export function convertLatex(sub_str)
@@ -56,26 +30,21 @@ export const convertLinks = (string) => {
   return str1 + _;
 }
 
-  
+
 export function renderMarkdown(val)
   {
+    just_repl.forEach(i => {
+      
+      val = val.replaceAll(i[0], i[1]);
+    })
 
-    val = val.replaceAll("    ", "&nbsp;");
-
-      // ([A-Za-z]|[^\x00-\x7F])(\d)
     line_repl.forEach(i => {
-      // val = line_replace( /*"\n" +*/ val, "\n" +i[0], "\n", i[1])
       val = __line_replace(val, i[0], i[1], i[2]);
-
-      // val = val.replace("\n", "");      
     })
   
     repl.forEach(i => {
       val = fnd(val, i[0], i[1]);
     })
-
-
-    // val = replaceMath(val, "$$");
 
     val = convertLinks(val);
   
@@ -83,7 +52,7 @@ export function renderMarkdown(val)
   }
 
 
-export function findAllMath(str, ptrn="$$", className="math") {
+export function findAllMath(str, ptrn="$$", className="math", tag="span") {
   let ind = findInside(str, ptrn); // Find where it starts and ends 
   let sub_str;
 
@@ -96,7 +65,7 @@ export function findAllMath(str, ptrn="$$", className="math") {
 
     math_strings.push(sub_str);
 
-    let html = `<span class="${className}"></span>`
+    let html = `<${tag} class="${className}"></${tag}>`
 
 
     str = insert_at(str, html, ind[0]);
@@ -105,4 +74,13 @@ export function findAllMath(str, ptrn="$$", className="math") {
 
   return [str, math_strings];
 }
+
+// export function addLineNumbers(codeString)
+// {
+//   return "<span>" + codeString.split("\n").join("</span><span>") + "</span>";
+// }
+
+
+
+
 

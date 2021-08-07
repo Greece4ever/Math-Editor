@@ -18,7 +18,7 @@ export let Latex = [
   
 export const line_repl = [
     ["#", "<h2>", "</h2><hr></hr>", "Large text with underline"],
-    ['-', "<ul>", "</ul>", "Text with left padding"],
+    ['-', "<ul>", "</ul>", "Text with left margin"],
     ['>', "<blockquote><ul>", "</ul></blockquote>", "bloquote"],
 ]
 
@@ -30,6 +30,12 @@ export const repl = [
     ["@@", "center", "Centered Text"],
     ["__", "sup", "Superscript"],
     ["^^", "sub", "Subscript"],
+]
+
+export const just_repl = [
+    ["\n\n",     "<p></p><br>\n\n"],
+    ["\r\n\r\n", "<p></p><br>\r\n"],
+    ["  ", "&nbsp;"],
 ]
 
 

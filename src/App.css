@@ -30,6 +30,7 @@ center {
 
 ::-webkit-scrollbar {
   width: 10px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -41,7 +42,7 @@ center {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f51b5; 
+  background: #3c3c3d; 
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Raleway:wght@100&display=swap');
@@ -125,6 +126,7 @@ pre {
 
   width: calc(100% - 50px);
 
+  overflow: auto;
   
   
   /* Fixed line height */

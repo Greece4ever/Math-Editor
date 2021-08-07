@@ -141,6 +141,7 @@ function App() {
   const [mathSymbols, setMathSymbols] = useState();
 
   const __render = (val) => {
+
     let [str, math_symbols] = findAllMath(val, "$$", "leonidas");
 
     setValue( [ renderMarkdown(str) ] );
@@ -154,8 +155,6 @@ function App() {
     let elms = document.getElementsByClassName("leonidas");
     for (let i=0; i < elms.length; i++)
     {
-
-
       elms[i].innerHTML = convertLatex(mathSymbols[i]);
     }
 
@@ -170,6 +169,7 @@ function App() {
 
   const handleChange = e => {
     let val = e;
+
     setTextValue(val);
 
     __render(val);
@@ -239,8 +239,10 @@ function App() {
           value={textValue}
           style={{width: "100%"}}
 
+
+
           onChange={e => handleChange(e)}
-          
+          wrapEnabled={true}
           fontSize={15}
           height={_height}
           placeholder={`Start typing some math. Syntax rules can be found in https://github.com/Greece4ever/Math-Editor`}

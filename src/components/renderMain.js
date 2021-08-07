@@ -1,6 +1,6 @@
 import katex from "katex";
 import convertFraction, { insert_at, splitAtRange } from "./parsing";
-import {Latex, line_repl, repl, m, fnd, removeAtRange, __line_replace, line_replace, findInside} from './replace'
+import {Latex, line_repl, repl, m, fnd, removeAtRange, __line_replace, findLink, findInside} from './replace'
 
 function replaceMath(str, ptrn="$$") {
     let ind = findInside(str, ptrn); // Find where it starts and ends 
@@ -32,7 +32,7 @@ function replaceMath(str, ptrn="$$") {
 export function convertLatex(sub_str)
 {
   Latex.forEach(symbol => {
-    sub_str = sub_str.replaceAll(symbol[0], symbol[1])
+    sub_str = sub_str.replaceAll(symbol[0], symbol[1] + " ")
   });
   
   try {
@@ -41,9 +41,27 @@ export function convertLatex(sub_str)
 
   return katex.renderToString(sub_str, {throwOnError: false});
 };
+
+export const convertLinks = (string) => {
+  let str1 = ""
+  let _ = findLink(string);
+
+
+  while ( typeof(_) !== "string" )
+  {
+      str1 += _[0];
+      _ = findLink(_[1]);
+  }
+
+  return str1 + _;
+}
+
   
 export function renderMarkdown(val)
   {
+
+    val = val.replaceAll("    ", "&nbsp;");
+
       // ([A-Za-z]|[^\x00-\x7F])(\d)
     line_repl.forEach(i => {
       // val = line_replace( /*"\n" +*/ val, "\n" +i[0], "\n", i[1])
@@ -58,6 +76,8 @@ export function renderMarkdown(val)
 
 
     // val = replaceMath(val, "$$");
+
+    val = convertLinks(val);
   
     return val;
   }
@@ -85,12 +105,4 @@ export function findAllMath(str, ptrn="$$", className="math") {
 
   return [str, math_strings];
 }
-
-
-
-console.log(findAllMath(`
-**ΝΟΜΟΣ 1** Σε κάθε άξονα, κάθε σώμα, που η συνισταμένη δύναμη του σε εκείνον τον άξονα $$F_{net}$$ είναι 0, κινείτε με σταθερή ταχύτητα ή μένει ακίνητο.
-
- @@ $$ F_{net}=ma= 0 => (du)/(dt)=0 => u=ct $$ &nbsp;	 ή &nbsp;	 $$u=0$$  @@
-`.trim() ));
 

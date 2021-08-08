@@ -116,6 +116,11 @@ a {
 }
 
 
+.MuiPopover-paper {
+  border-radius: 500px !important;
+}
+
+
 pre {
   /* font-size: 15px; */
   /* border: 2px solid grey; */

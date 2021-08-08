@@ -30,6 +30,7 @@ import "ace-builds/src-noconflict/ext-language_tools"
 
 import ImageIcon from '@material-ui/icons/Image';
 import HelpIcon from '@material-ui/icons/Help';
+import Icons from './elementComponents/icons';
 
 // import Dialog from '@material-ui/core/Dialog';
 import HelpDialog from './elementComponents/dialog'
@@ -44,6 +45,9 @@ import {
   exportGeneratedCSS as collectCSS,
   isEnabled as isDarkReaderEnabled
 } from 'darkreader';
+
+
+
 
 
 function App() {
@@ -70,30 +74,6 @@ function App() {
   const [hidden, setHidden] = useState(false);
 
 
-  // Load previous text from memory
-  // useEffect(() => {
-  //   let val = localStorage.getItem("html");
-  //   if (!val)
-  //     return;
-
-  //   setTextValue(val);
-
-  //   line_repl.forEach(i => {
-  //     val = line_replace(val, "\n" +i[0], "\n", i[1])
-  //   })
-
-  //   repl.forEach(i => {
-  //     val = fnd(val, i[0], i[1]);
-  //   })
-
-  //   val = replaceMathCenter(val, "$$");
-  //   val = replaceMath(val, "@@");
-
-  //   setValue(val);
-
-  // }, [])
-
-
   // Print End Listener
   useEffect(() => {
     const onPrintEnd = (event) => {
@@ -115,18 +95,10 @@ function App() {
       console.log(document.getElementById("NOTICEME").getAttribute("val"));
       if (document.getElementById("NOTICEME").getAttribute("val") == "1")
       {
-        domtoimage.toPng(document.getElementById("NOTICEME")).then(blob => {
-          saveAs(blob, `math${Math.random()}.png`)
+        
+        domtoimage.toSvg(document.getElementById("NOTICEME")).then(blob => {
+          saveAs(blob, `math${Math.random()}.svg`)
         })
-
-        // html2canvas(document.getElementById("NOTICEME") ).then(canvas => {
-        //   var link = document.createElement("a");
-        //   link.setAttribute('download', `math${Math.random().toString().split(".")[1]}.png`);
-        //   link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-        //   link.click();     
-        //   setHidden(false);    
-        // })
-
       }
       else {
         window.print();
@@ -227,25 +199,10 @@ function App() {
     for (let i=0; i < elms.length; i++)
     {
       elms[i].innerText = codeSymbols[i].trim();
-      // elms[i].innerText = addLineNumbers(codeSymbols[i].trim());
-      // let elms_2 = addLineNumbers(codeSymbols[i].trim());;
-      // console.log(elms_2)
-      // for (let k=0; k < elms_2.length; k++)
-      // {
-        
-      //   elms[i].appendChild(elms_2[k]);
-      //   elms[i].innerHTML += "\n";
-      // }
-
     }
 
-  
   }, [value, mathSymbols, codeSymbols]);
 
-  // useEffect(() => {
-    
-
-  // }, [value])
 
 
   const handleChange = e => {
@@ -266,10 +223,12 @@ function App() {
     document.getElementById("NOTICEME").setAttribute("val", "1");
     setHidden(true);
     setValue2(value);
-
   }
 
   const [dialogOpen, setDialogOpen] = useState(false);
+
+
+  const [saveOpen, setSaveOpen] = useState(false);
 
   return (
     <div className="App">
@@ -295,27 +254,7 @@ function App() {
 
       </div>
 
-      <div style={{
-      position: "absolute",
-      right: 0,
-      bottom: 0,
-      display: "grid"
-      }}>
-        <Fab onClick={() => savePDF()} style={{marginBottom: "10px", marginRight: "10px"}} color="secondary" aria-label="add">
-          <PictureAsPdfIcon />    
-        </Fab>
-
-        <Fab onClick={() => savePNG()} style={{marginBottom: "10px", marginRight: "10px"}} color="primary" aria-label="add">
-          <ImageIcon />
-        </Fab>
-
-      <Fab onClick={e => setDialogOpen(true)} style={{marginBottom: "10px", marginRight: "10px"}} color="contained" aria-label="add" >
-        <HelpIcon />
-      </Fab>
-      </div>
-
-
-
+      <Icons />
 
       <Grid style={{ }} container spacing={3}>
         <Grid ref={_grid} style={{borderRight: `10px solid ${main_color}`, paddingBottom: 0, paddingRight: 0, height: _height}} item xs={6}>

@@ -5,16 +5,11 @@ import React, { useEffect, useState, useRef } from "react";
 // import {Latex, line_repl, repl, m, fnd, removeAtRange, line_replace, findInside} from './components/replace'
 import {renderMarkdown, findAllMath, convertLatex} from './components/renderMain';
 
-import html2canvas from 'html2canvas';
-
 import "./App.css";
 
 import useInterval, {useEffectAllDepsChange} from "./components/hooks";
 
-import Fab from '@material-ui/core/Fab';
-
 import Grid from '@material-ui/core/Grid';
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 
 import AceEditor from "react-ace";
@@ -28,12 +23,9 @@ import "ace-builds/src-noconflict/theme-tomorrow";
 import "ace-builds/src-noconflict/ext-language_tools"
 
 
-import ImageIcon from '@material-ui/icons/Image';
-import HelpIcon from '@material-ui/icons/Help';
 import Icons from './elementComponents/icons';
 
 // import Dialog from '@material-ui/core/Dialog';
-import HelpDialog from './elementComponents/dialog'
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
 
@@ -47,7 +39,13 @@ import {
 } from 'darkreader';
 
 
+const format = {
+  png: "1",
+  svg: "2",
+  pdf: "3"
+}
 
+const main_color = "rgb(57, 68, 70)";
 
 
 function App() {
@@ -55,29 +53,29 @@ function App() {
   const [value, setValue]   = useState([""]);  
   const [value2, setValue2] = useState("");
 
+  const setDarkMode = (val) => {
+    if (!val)
+      return disableDarkMode();
+    enableDarkMode({
+      brightness: 100,
+      contrast: 90,
+      sepia: 10,
+    });
+  }
 
-  // useEffect(() => {
-  //   enableDarkMode({
-  //     brightness: 100,
-  //     contrast: 90,
-  //     sepia: 10,
-  // });
-  
-  // }, [])
 
+  // save localstorage
   useInterval(() => {
     localStorage.setItem("html", textValue)
   }, 15 * 1000);
   
 
-
   const [hidden, setHidden] = useState(false);
-
 
   // Print End Listener
   useEffect(() => {
     const onPrintEnd = (event) => {
-      setHidden(false);
+      // setHidden(false);
     }
       
     window.addEventListener("afterprint", onPrintEnd);
@@ -87,25 +85,44 @@ function App() {
     }
   }, []);
 
-  const main_color = "rgb(57, 68, 70)";
+
+  const exitScreenShot = () => {
+    setHidden(false);
+    document.getElementById("NOTICEME").innerHTML = "";
+    __render(textValue);
+  }
 
   // Print when hit PRINT .PDF
   useEffect(() => {
     if (hidden) {
-      console.log(document.getElementById("NOTICEME").getAttribute("val"));
-      if (document.getElementById("NOTICEME").getAttribute("val") == "1")
+      let latexElement = document.getElementById("NOTICEME");
+      let type = latexElement.getAttribute("val");
+      setMathCode();
+      
+      
+      switch (type)
       {
-        
-        domtoimage.toSvg(document.getElementById("NOTICEME")).then(blob => {
-          saveAs(blob, `math${Math.random()}.svg`)
-        })
+        case format.svg:
+          replaceKatexTags();
+          domtoimage.toSvg(latexElement).then(blob => {    saveAs(blob, `math${Math.random()}.svg`);  exitScreenShot(); });
+          break;
+        case format.png:
+          replaceKatexTags();
+          domtoimage.toPng(latexElement).then(blob => {    saveAs(blob, `math${Math.random()}.png`);  exitScreenShot(); });
+          break;
+        case format.pdf:
+            addLinesToCodeBlocks();
+            document.title = String( new Date() );
+            // document.body.style.overflow = "auto";
+            // document.querySelector("html").style.overflow = "auto";
+
+            // window.print();
+            break;
       }
-      else {
-        window.print();
-      }
+
+      
     }
   }, [hidden])
-
 
 
   // Editor
@@ -165,42 +182,48 @@ function App() {
     return d;
   }
   
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      let elms = document.getElementsByClassName("kostas");
-      for (let i=0; i < elms.length; i++)
-      {
-        let elms2 = addLineNumbers(elms[i].innerText);
-        elms[i].innerText = "";
-        for (let k=0; k < elms2.length; k++)
-        {
-          elms[i].appendChild(elms2[k]);
-          elms[i].innerHTML += "\n";
-        }
-      }
-      
-    }, 1000)
-
-    return () => clearTimeout(timeout);
-  }, [textValue])
-
-  // change between 1 render or multiple renders
-  useEffectAllDepsChange(() => {
-
-
+  const setMathCode = () => {
     let elms = document.getElementsByClassName("leonidas");
+    
     for (let i=0; i < elms.length; i++)
     {
       elms[i].innerHTML = convertLatex(mathSymbols[i]);
     }
     elms = document.getElementsByClassName("kostas");
 
+    
     for (let i=0; i < elms.length; i++)
     {
       elms[i].innerText = codeSymbols[i].trim();
     }
+  }
 
+  function addLinesToCodeBlocks() {
+    let elms = document.getElementsByClassName("kostas");
+    for (let i=0; i < elms.length; i++)
+    {
+      let elms2 = addLineNumbers(elms[i].innerText);
+      elms[i].innerText = "";
+      for (let k=0; k < elms2.length; k++)
+      {
+        elms[i].appendChild(elms2[k]);
+        elms[i].innerHTML += "\n";
+      }
+    }
+  }
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      addLinesToCodeBlocks();      
+    }, 1000)
+
+    return () => clearTimeout(timeout);
+  }, [textValue])
+
+
+  // change between 1 render or multiple renders
+  useEffectAllDepsChange(() => {
+    setMathCode();
   }, [value, mathSymbols, codeSymbols]);
 
 
@@ -211,30 +234,71 @@ function App() {
     __render(val);
   }
 
-  const savePDF = () => {
-    document.getElementById("NOTICEME").setAttribute("val", "0")
+
+  const save = (_format) => {
+    console.log(_format, format[_format])
+    let str_format = format[_format];
+    if (!str_format)
+      return console.error(`Error: ${_format} not found`);
+    
+    document.getElementById("NOTICEME").setAttribute("val", str_format);
     setHidden(true);
     setValue2(value);
     localStorage.setItem("html", textValue);
   }
 
+  function replaceKatexTags()
+  {
+    Array.from( document.getElementsByTagName("mi") ).forEach(i => {
+      let q = document.createElement("span");
+      q.classList.add("mi");
+      q.innerText = i.innerText;
+      i.replaceWith(q);
 
-  const savePNG = () => {
-    document.getElementById("NOTICEME").setAttribute("val", "1");
-    setHidden(true);
-    setValue2(value);
+    })
+
+    Array.from( document.getElementsByTagName("mrow") ).forEach(i => {
+      let q = document.createElement("span");
+      q.classList.add("mrow");
+      q.innerText = i.innerText;
+      i.replaceWith(q);
+    })
+
+    Array.from( document.getElementsByTagName("annotation") ).forEach(i => {
+      let q = document.createElement("span");
+      q.classList.add("annotation");
+      q.innerText = i.innerText;
+      i.replaceWith(q);
+    })
+
+    Array.from( document.getElementsByTagName("semantics") ).forEach(i => {
+      let q = document.createElement("span");
+      q.classList.add("semantics");
+      q.innerText = i.innerText;
+      i.replaceWith(q);
+    })
+
+
+    Array.from( document.getElementsByTagName("math") ).forEach(i => {
+      let q = document.createElement("span");
+      q.classList.add("math");
+      q.innerText = i.innerText;
+      i.replaceWith(q);
+    })
+
   }
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-
-  const [saveOpen, setSaveOpen] = useState(false);
+  // useEffect(() => {
+  //   let elm = document.getElementById("sak");
+  //   elm.innerHTML =convertLatex("a =(du)/(dt)=ct => du =a*dt => \\int_{u_0}^{u_f} du = a \\int_{t0}^{t_f} dt => u_f - u0 = a (t_f -t0) => u_f = u0 - a(t_f-t0)");
+  
+  //   replaceKatexTags();
+    
+  //   domtoimage.toPng(elm).then(blob => saveAs(blob, "main.png"))
+  // }, [])
 
   return (
     <div className="App">
-
-      <HelpDialog open={dialogOpen} setOpen={setDialogOpen} />
-
       <div style={{display: hidden ? "none" : ""}}>
 
       <div style={{
@@ -246,24 +310,21 @@ function App() {
         alignItems: "center",
         position: "relative"
       
-      }}
-      
-      
-      onWheel={() => console.log("scroll")}>
-
+      }}>
 
       </div>
 
-      <Icons />
+      <Icons save={save} setDarkMode={setDarkMode} />
 
       <Grid style={{ }} container spacing={3}>
         <Grid ref={_grid} style={{borderRight: `10px solid ${main_color}`, paddingBottom: 0, paddingRight: 0, height: _height}} item xs={6}>
           <AceEditor  
+          onLoad={(editor) => {
+            editor.session.setNewLineMode("unix");
+          }}
+
           value={textValue}
           style={{width: "100%"}}
-
-
-
           onChange={e => handleChange(e)}
           wrapEnabled={true}
           fontSize={15}
@@ -272,6 +333,8 @@ function App() {
           mode="markdown"
           theme="monokai"
           name="blah2" />
+
+
 
 
         </Grid>
@@ -283,18 +346,32 @@ function App() {
             float: "right",
 
             marginTop: "10px",
-            fontFamily: "math",
+            fontFamily: "'KaTeX_Main'",
             height: "calc(100% - 10px)",
 
-            overflow: "auto"
+            overflow: "auto",
+            wordWrap: "break-word"
           }}
 
-          dangerouslySetInnerHTML={{__html: value[0] }}></div>
+          dangerouslySetInnerHTML={{__html: hidden ? "" : value[0] }}></div>
         </Grid>
       </Grid>
       </div>
 
-        <div val="0" id="NOTICEME" style={{display: hidden ? "block" : "none", fontFamily: "math", margin: "10px", minHeight: window.innerHeight}} dangerouslySetInnerHTML={{__html: value2}}></div>
+      <div dangerouslySetInnerHTML={{__html: value2}} val="0" id="NOTICEME" 
+      style={{
+        display: hidden ? "block" : "none", 
+        fontFamily: "math", 
+        margin: "10px", 
+        minHeight: window.innerHeight,
+        // position: "relative",
+        // width: "100%",
+        // height: "100%",
+        // overflow: "auto"
+      }}
+        
+        
+        ></div>
     </div>
   );
 }

@@ -33,15 +33,17 @@ export const convertLinks = (string) => {
 
 export function renderMarkdown(val)
   {
+    line_repl.forEach(i => {
+      val = __line_replace(val, i[0], i[1], i[2]);
+    })
+
+
     just_repl.forEach(i => {
       
       val = val.replaceAll(i[0], i[1]);
     })
 
-    line_repl.forEach(i => {
-      val = __line_replace(val, i[0], i[1], i[2]);
-    })
-  
+    
     repl.forEach(i => {
       val = fnd(val, i[0], i[1]);
     })

@@ -82,14 +82,11 @@ function convertDict2(html_array, line_arr, word="Math")
     return arr;
 }
 
-
+const l_table = convertDict(Latex);
+const h_table = convertDict2(repl, line_repl);
 
 
 const HelpDialog = (props) => {
-
-    const [latexTable, setLatexTable] = useState(convertDict(Latex));
-    const [htmlTable, setHtmlTable]   = useState(convertDict2(repl, line_repl));
-
     return (
         <Dialog onClose={() => props.setOpen(false)} className={"XAXAXAXA"}  maxWidth={"xl"}  open={props.open}>
 
@@ -119,9 +116,9 @@ const HelpDialog = (props) => {
                 </DialogContentText>
             
 
-            <SimpleTable id={"table0"} first={"Latex"} second={"Markdown"} table={latexTable}></SimpleTable>
+            <SimpleTable id={"table0"} first={"Latex"} second={"Markdown"} table={l_table}></SimpleTable>
 
-            <SimpleTable id={"table1"} first={"HTML"} second={"Markdown"} table={htmlTable}></SimpleTable>
+            <SimpleTable id={"table1"} first={"HTML"} second={"Markdown"} table={h_table}></SimpleTable>
 
 
             </DialogContent>

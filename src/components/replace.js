@@ -33,8 +33,8 @@ export const repl = [
 ]
 
 export const just_repl = [
-    ["\n\n",     "<p></p><br>\n\n"],
-    ["\r\n\r\n", "<p></p><br>\r\n"],
+    ["\n\n\n",     "<p></p><br>\n\n"], // 2 empty lines (+ 1 line ending e,g hello\n\n\n)
+    ["\r\n \r\n", "<p></p><br>\r\n"],
     ["  ", "&nbsp;"],
 ]
 
@@ -165,7 +165,7 @@ export function __line_replace(string, symbol, open_tag, close_tag)
 
         let _ = removeAtRanges(str0, 0, i  + len);
         
-        str1 += _[0];
+        str1 += _[0]; // Vihart 
         str0 = _[1];
 
         str0 = str0.replace("\n", `${close_tag}\n`);

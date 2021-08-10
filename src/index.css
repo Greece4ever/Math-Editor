@@ -32,4 +32,13 @@ code {
                             'embedded-opentype', and 'svg' */
 }
 
+@font-face {
+  font-family: 'immono';
+  src: local('immono'), url(./fonts/immono.ttf) format('opentype');
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
+
+
+
 

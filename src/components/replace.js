@@ -125,9 +125,26 @@ export function findLink(str)
     let str1 = _remove(str, 0, i);
 
     
-    
-    return [str2 + `<a href="${link}" target="_blank" rel="noopener noreferrer">${desc}</a>`, str1];
+    // starting string, rest of string, link value
+    return [str2 + `<a class="link69" href="" target="_blank" rel="noopener noreferrer">${desc}</a>`, str1, link];
+    // return [str2 + `<a href="${link}" target="_blank" rel="noopener noreferrer">${desc}</a>`, str1];
 };
+
+
+export const convertLinks = (string) => {
+    let str1 = ""
+    let _ = findLink(string);
+    let links = [];
+  
+    while ( typeof(_) !== "string" )
+    {
+        links.push(_[2]);
+        str1 += _[0];
+        _ = findLink(_[1]);
+    }
+
+    return [str1 + _, links];
+  }  
 
 
 export function removeAtRange(str, x, y) {

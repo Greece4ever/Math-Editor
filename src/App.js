@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import {renderMarkdown, findAllMath, convertLatex} from './components/renderMain';
+import { convertLinks } from './components/replace';
 
 import "./App.css";
 
@@ -153,16 +154,18 @@ function App() {
   
   const [mathSymbols, setMathSymbols] = useState();
   const [codeSymbols, setCodeSymbols] = useState();
+  const [links, setLinks] = useState();
 
   const __render = (val) => {
-
-    let code_symbols;
+    let code_symbols, _links;
+    [val, _links] = convertLinks(val);
     [val, code_symbols] = findAllMath(val, "```", "kostas", "pre");
     let [str, math_symbols] = findAllMath(val, "$$", "leonidas");
 
     setValue( [ renderMarkdown(str) ] );
-    setMathSymbols(math_symbols)
+    setMathSymbols( math_symbols )
     setCodeSymbols( code_symbols )
+    setLinks(_links);
   }
 
   const addLineNumbers = (codeString) =>
@@ -192,6 +195,14 @@ function App() {
     {
       elms[i].innerText = codeSymbols[i].trim();
     }
+
+    elms = document.getElementsByClassName("link69");
+    for (let i=0; i < elms.length; i++)
+    {
+      elms[i].setAttribute("href", links[i]);
+    }
+
+
   }
 
   function addLinesToCodeBlocks() {
@@ -222,7 +233,7 @@ function App() {
     let temp1 = document.getElementById("peos");
     setMathCode();
     temp1.scrollTo(0, temp1.offsetHeight)
-  }, [value, mathSymbols, codeSymbols]);
+  }, [value, mathSymbols, codeSymbols, links]);
 
 
 
@@ -234,7 +245,6 @@ function App() {
 
 
   const save = (_format) => {
-    console.log(_format, format[_format])
     let str_format = format[_format];
     if (!str_format)
       return console.error(`Error: ${_format} not found`);

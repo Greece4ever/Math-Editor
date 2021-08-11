@@ -16,21 +16,6 @@ export function convertLatex(sub_str)
   return katex.renderToString(sub_str, {throwOnError: false});
 };
 
-export const convertLinks = (string) => {
-  let str1 = ""
-  let _ = findLink(string);
-
-
-  while ( typeof(_) !== "string" )
-  {
-      str1 += _[0];
-      _ = findLink(_[1]);
-  }
-
-  return str1 + _;
-}
-
-
 export function renderMarkdown(val)
   {
     line_repl.forEach(i => {
@@ -48,7 +33,7 @@ export function renderMarkdown(val)
       val = fnd(val, i[0], i[1]);
     })
 
-    val = convertLinks(val);
+    // val = convertLinks(val);
   
     return val;
   }

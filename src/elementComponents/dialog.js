@@ -7,8 +7,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 
-import { Latex, repl, line_repl } from "../components/replace";
-import { convertLatex, convertLinks } from "../components/renderMain"
+import { Latex, repl, line_repl, findLink } from "../components/replace";
+import { convertLatex,  } from "../components/renderMain"
 
 
 import SimpleTable from './table';
@@ -42,11 +42,11 @@ function convertDict(latex_array)
 function convertDict2(html_array, line_arr, word="Math")
 {
     let arr = [ ];
-
-    let page = "https://github.com/Greece4ever";
-    let _link = `[${word}](${page})`;
-    
-    arr.push({first: convertLinks(_link), second: _link, third: "Link" })
+    {
+        let page = "https://github.com/Greece4ever";
+        let _link = `[${word}](${page})`;
+        arr.push({first: `<a href="${page}">${word}</a>`, second: _link, third: "Link" })    
+    }
 
     arr.push({first: convertLatex("x^2 = -1"), second: "$$ x^2 = - 1 $$", third: "Use $$ to write math" })
 

@@ -1,8 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-// import katex from "katex";
-
-// import convertFraction, { insert_at, splitAtRange } from "./components/parsing";
-// import {Latex, line_repl, repl, m, fnd, removeAtRange, line_replace, findInside} from './components/replace'
 import {renderMarkdown, findAllMath, convertLatex} from './components/renderMain';
 
 import "./App.css";
@@ -25,9 +21,12 @@ import "ace-builds/src-noconflict/ext-language_tools"
 
 import Icons from './elementComponents/icons';
 
-// import Dialog from '@material-ui/core/Dialog';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
+import moment from 'moment/min/moment-with-locales'
+
+
+
 
 
 import {
@@ -43,7 +42,7 @@ const format = {
   png: "1",
   svg: "2",
   pdf: "3"
-}
+} 
 
 const main_color = "rgb(57, 68, 70)";
 
@@ -75,7 +74,7 @@ function App() {
   // Print End Listener
   useEffect(() => {
     const onPrintEnd = (event) => {
-      // setHidden(false);
+      exitScreenShot()
     }
       
     window.addEventListener("afterprint", onPrintEnd);
@@ -99,7 +98,6 @@ function App() {
       let type = latexElement.getAttribute("val");
       setMathCode();
       
-      
       switch (type)
       {
         case format.svg:
@@ -112,16 +110,13 @@ function App() {
           break;
         case format.pdf:
             addLinesToCodeBlocks();
-            document.title = String( new Date() );
-            // document.body.style.overflow = "auto";
-            // document.querySelector("html").style.overflow = "auto";
-
-            // window.print();
+            document.title = moment().format("LLLL");
+            window.print();
             break;
-      }
-
-      
+      } 
     }
+    else 
+    __render(textValue)
   }, [hidden])
 
 
@@ -140,6 +135,7 @@ function App() {
   useEffect(() => {
     set_rendered(window.innerHeight - _render.current.offsetTop);
   }, [_render])
+
 
   useEffect(() => {
     const onResize = (event) => {
@@ -189,8 +185,8 @@ function App() {
     {
       elms[i].innerHTML = convertLatex(mathSymbols[i]);
     }
-    elms = document.getElementsByClassName("kostas");
 
+    elms = document.getElementsByClassName("kostas");
     
     for (let i=0; i < elms.length; i++)
     {
@@ -223,7 +219,9 @@ function App() {
 
   // change between 1 render or multiple renders
   useEffectAllDepsChange(() => {
+    let temp1 = document.getElementById("peos");
     setMathCode();
+    temp1.scrollTo(0, temp1.offsetHeight)
   }, [value, mathSymbols, codeSymbols]);
 
 
@@ -288,14 +286,7 @@ function App() {
 
   }
 
-  // useEffect(() => {
-  //   let elm = document.getElementById("sak");
-  //   elm.innerHTML =convertLatex("a =(du)/(dt)=ct => du =a*dt => \\int_{u_0}^{u_f} du = a \\int_{t0}^{t_f} dt => u_f - u0 = a (t_f -t0) => u_f = u0 - a(t_f-t0)");
-  
-  //   replaceKatexTags();
-    
-  //   domtoimage.toPng(elm).then(blob => saveAs(blob, "main.png"))
-  // }, [])
+
 
   return (
     <div className="App">
@@ -328,15 +319,11 @@ function App() {
           onChange={e => handleChange(e)}
           wrapEnabled={true}
           fontSize={15}
-          height={_height}
+          height={_height - 12}
           placeholder={`Start typing some math. Syntax rules can be found in https://github.com/Greece4ever/Math-Editor`}
           mode="markdown"
           theme="monokai"
           name="blah2" />
-
-
-
-
         </Grid>
 
         <Grid style={{height: _rendered, paddingBottom: 0, borderLeft: `10px solid ${main_color}`}} ref={_render} item xs={6}>
@@ -364,10 +351,6 @@ function App() {
         fontFamily: "math", 
         margin: "10px", 
         minHeight: window.innerHeight,
-        // position: "relative",
-        // width: "100%",
-        // height: "100%",
-        // overflow: "auto"
       }}
         
         

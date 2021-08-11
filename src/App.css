@@ -10,6 +10,7 @@
   color: grey !important;
 }
 
+
 *:focus {
   outline: #3f51b5 !important;
   /* border:1px solid red; */
@@ -167,6 +168,10 @@ pre span:before {
 
 
 @media print {
+  * {
+    -webkit-print-color-adjust: exact; 
+  }
+  
   body, html {
     height: initial;
     overflow: initial;
@@ -185,3 +190,5 @@ pre span:before {
     top: 0;
   }
 }
+
+

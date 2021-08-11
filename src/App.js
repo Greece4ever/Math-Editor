@@ -343,8 +343,9 @@ function App() {
             float: "right",
 
             marginTop: "10px",
-            fontFamily: "'KaTeX_Main'",
+            fontFamily: "math",
             height: "calc(100% - 10px)",
+            // fontSize: "17px",
 
             overflow: "auto",
             wordWrap: "break-word"

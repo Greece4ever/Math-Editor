@@ -16,8 +16,16 @@ export let Latex = [
 
 
   
-export const line_repl = [
-    ["#", "<h2>", "</h2><hr></hr>", "Large text with underline"],
+export const line_repl = [    
+
+    ["##_", "<h3>", "</h3><hr></hr>", "Medium text (h3) with underline"],
+    ["##", "<h3>", "</h3>",  "Medium text (h3)"],
+
+    ["#_", "<h2>", "</h2><hr></hr>",  "Large  text (h2) with underline"],
+    ["#", "<h2>", "</h2>",  "Large text (h2)"],
+
+
+
     ['-', "<ul>", "</ul>", "Text with left margin"],
     ['>', "<blockquote><ul>", "</ul></blockquote>", "bloquote"],
 ]
@@ -167,7 +175,7 @@ export function __line_replace(string, symbol, open_tag, close_tag)
     let len = open_tag.length;
 
     // TODO: If symbol.length > 1 then bug
-    if (str0[0] == symbol)
+    if (str0.startsWith(symbol))
     {
         str0 = str0.replace(symbol, `${open_tag}`);
         str0 = str0.replace("\n",   `${close_tag}\n`);

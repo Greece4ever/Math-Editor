@@ -15,8 +15,7 @@ export default function useInterval(callback, delay) {
       }, delay);
       return () => clearInterval(id);
     }, [delay]);
-}
-  
+}  
 
 export function useEffectAllDepsChange(fn, deps) {
   const [changeTarget, setChangeTarget] = useState(deps);
@@ -32,4 +31,14 @@ export function useEffectAllDepsChange(fn, deps) {
   }, [deps]);
 
   useEffect(fn, changeTarget);
+}
+
+
+export const useDidMountEffect = (func, deps) => {
+  const didMount = useRef(false);
+
+  useEffect(() => {
+      if (didMount.current) func();
+      else didMount.current = true;
+  }, deps);
 }

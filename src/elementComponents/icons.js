@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Fab from '@material-ui/core/Fab';
 
 import SaveButtton from './save';
@@ -14,6 +14,7 @@ import logoPNG from './png-file-format.svg';
 import CopyrightIcon from '@material-ui/icons/Copyright';
 import SimpleDialog from './dialog2'
 import HelpDialog from './dialog';
+import { useDidMountEffect } from '../components/hooks'
 
 const createIcons = () => {
     let ret = [];
@@ -32,24 +33,86 @@ const createIcons = () => {
     return ret;
 }
 
+function isEventInElement(event, element)   {
+    var rect = element.getBoundingClientRect();
+    var x = event.clientX;
+    if (x < rect.left || x >= rect.right) return false;
+    var y = event.clientY;
+    if (y < rect.top || y >= rect.bottom) return false;
+    return true;
+}
+
+let _trans = 56 + 10;
+
 const Icons = (props) => {
     const [helpDialogOpen, setHelpDialogOpen] = useState(false);
     const [cDialogOpen, setCdialogOpen] = useState(false);
     const [icons, setIcons] = useState(createIcons());
     const [dark, setDark] = useState(false);
 
+    const [settingsOpen, setSettingsOpen] = useState(false);
+    const [saveOpen,     setSaveOpen]     = useState(false);
+
+    const [mpos, setMpos] = useState({clientX: window.innerHeight, clientY: window.innerHeight});
+    const mainRef = React.useRef();
+    
+    const saveRef    = useRef(saveOpen);
+    const settingRef = useRef(settingsOpen);
+    saveRef.current = saveOpen;
+    settingRef.current = settingsOpen;
+
     React.useEffect(() => {
         props.setDarkMode(dark);
     }, [dark])
- 
-    return (
-        <div style={{ position: "absolute", right: 0, bottom: 0, display: "grid"}}>
-            <HelpDialog open={helpDialogOpen} setOpen={setHelpDialogOpen} />
 
+    const [translate, setTranslate] = useState(`translate(0, 0)`);
+ 
+    useEffect(() => {
+        window.addEventListener("mousemove", (e) => {
+            setMpos(e);
+        })
+
+        return () => window.removeEventListener("mousemove", () => {}) 
+    }, [])
+
+    useEffect(() => {
+        let timeout = setTimeout(() => {
+            if ( !(saveRef.current || settingRef.current) )
+                onMouseLeave();            
+        }, 1.5 * 1000)
+
+        return () => {clearTimeout(timeout)}
+    }, [])
+
+    useDidMountEffect(() => {        
+        if (settingsOpen || saveOpen || isEventInElement(mpos, mainRef.current))
+            return;
+        
+        onMouseLeave();
+    }, [saveOpen, settingsOpen])
+
+    useDidMountEffect(() => {
+        if (helpDialogOpen || cDialogOpen)
+            setTranslate(`translate(${0}, 0)`);
+        else
+            onMouseLeave();
+    }, [cDialogOpen, helpDialogOpen])
+
+    const onMouseOver = () => {
+        setTranslate(`translate(${0}, 0)`);
+    }
+
+    const onMouseLeave = () => {
+        if ( !(settingsOpen || saveOpen) )
+                setTranslate(`translate(${_trans}px, 0)`);
+    }    
+
+    return (
+        <div ref={mainRef} onMouseLeave={e => onMouseLeave(e)} onMouseEnter={e => onMouseOver(e)} style={{position: "absolute", right: 0, bottom: 0, display: "grid"}}>
+            <HelpDialog open={helpDialogOpen} setOpen={setHelpDialogOpen} />
             <SimpleDialog onClose={setCdialogOpen} Icons={icons} open={cDialogOpen} />
 
-             
-            <SaveButtton backgroundColor={"#3f51b5"} color={ "primary" } icon={<SettingsIcon  />}>
+            <SaveButtton open={settingsOpen} setOpen={setSettingsOpen} style={{ transition: "transform 1s", transform: translate  }} backgroundColor={"#3f51b5"} color={ "primary" } icon={<SettingsIcon  />}>
                 <Fab onClick={() => setDark(prev => !prev)} style={{margin: "10px", backgroundColor: "#2a2d2f", color: "#f1ff1a"}}>
                     <Brightness3Icon />
                 </Fab>
@@ -63,20 +126,20 @@ const Icons = (props) => {
 
             </SaveButtton>
 
-            <SaveButtton backgroundColor={"#f50057"} color={ "secondary" } icon={ <SaveAltIcon /> }>
+            <SaveButtton open={saveOpen} setOpen={setSaveOpen} style={{ transition: "transform 1s",  transform: translate }} backgroundColor={"#f50057"} color={ "secondary" } icon={ <SaveAltIcon /> }>
 
                 <Fab onClick={e => props.save("pdf")} style={{margin: "10px", background: "#2a2d2f"}}>
-                    {/* <PictureAsPdfIcon style={{color: "red"}} /> */}
                     <img style={{width: "32px"}} src={logoPDF}></img>
                 </Fab>
+
                 <Fab onClick={e => props.save("svg")} style={{margin: "10px", backgroundColor: "#2a2d2f"}}>
-                <img style={{width: "32px"}} src={logoSVG}></img>
+                    <img style={{width: "32px"}} src={logoSVG}></img>
                 </Fab>
+
                 <Fab onClick={e => props.save("png")} style={{margin: "10px", backgroundColor: "#2a2d2f"}}>
                     <img style={{width: "32px"}} src={logoPNG}></img>
                 </Fab>
 
-                
             </SaveButtton>
 
         </div>  

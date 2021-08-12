@@ -3,7 +3,7 @@ import Fab from '@material-ui/core/Fab';
 import Popover from '@material-ui/core/Popover';
 
 const SaveButton = (props) => {
-    const [open, setOpen] = useState(false);
+    const {open, setOpen} = props; //useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
 
     const HandleFabClick = (event) => {
@@ -16,13 +16,11 @@ const SaveButton = (props) => {
         setAnchorEl(null);
     }
 
-
     return (
-        <div>       
+        <div style={props.style}>       
             <Fab color={props.color} style={{marginBottom: "10px", marginRight: "10px"}} onClick={e => HandleFabClick(e)}>
                 {props.icon}
             <Popover 
-
                 open={open}
                 anchorEl={anchorEl}
                 onClose={e => handleClose(e)}
@@ -34,9 +32,8 @@ const SaveButton = (props) => {
                   transformOrigin={{
                     vertical: 'center',
                     horizontal: 'right',
-                  }}
-                                
-            >
+                  }}>
+
             <div style={{position: "relative", backgroundColor: props.backgroundColor}}>
                 <div style={{display: "grid"}}>
                     {props.children}

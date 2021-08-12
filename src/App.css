@@ -167,11 +167,7 @@ pre span:before {
 }
 
 
-@media print {
-  * {
-    -webkit-print-color-adjust: exact; 
-  }
-  
+@media print {  
   body, html {
     height: initial;
     overflow: initial;

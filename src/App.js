@@ -27,9 +27,6 @@ import { saveAs } from 'file-saver';
 import moment from 'moment/min/moment-with-locales'
 
 
-
-
-
 import {
   enable as enableDarkMode,
   disable as disableDarkMode,
@@ -156,6 +153,7 @@ function App() {
   const [codeSymbols, setCodeSymbols] = useState();
   const [links, setLinks] = useState();
 
+
   const __render = (val) => {
     let code_symbols, _links;
     [val, _links] = convertLinks(val);
@@ -167,6 +165,7 @@ function App() {
     setCodeSymbols( code_symbols )
     setLinks(_links);
   }
+
 
   const addLineNumbers = (codeString) =>
   {
@@ -181,6 +180,7 @@ function App() {
     return d;
   }
   
+
   const setMathCode = () => {
     let elms = document.getElementsByClassName("leonidas");
     
@@ -205,6 +205,7 @@ function App() {
 
   }
 
+
   function addLinesToCodeBlocks() {
     let elms = document.getElementsByClassName("kostas");
     for (let i=0; i < elms.length; i++)
@@ -218,6 +219,7 @@ function App() {
       }
     }
   }
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -254,6 +256,7 @@ function App() {
     setValue2(value);
     localStorage.setItem("html", textValue);
   }
+
 
   function replaceKatexTags()
   {
@@ -301,19 +304,16 @@ function App() {
   return (
     <div className="App">
       <div style={{display: hidden ? "none" : ""}}>
-
-      <div style={{
-        width: "100%",
-        height: "10px",
-        backgroundColor: "rgb(57, 68, 70)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "relative"
-      
-      }}>
-
-      </div>
+        <div style={{
+          width: "100%",
+          height: "10px",
+          backgroundColor: "rgb(57, 68, 70)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "relative"
+        
+        }}></div>
 
       <Icons save={save} setDarkMode={setDarkMode} />
 
@@ -362,10 +362,7 @@ function App() {
         fontFamily: "math", 
         margin: "10px", 
         minHeight: window.innerHeight,
-      }}
-        
-        
-        ></div>
+      }}></div>
     </div>
   );
 }

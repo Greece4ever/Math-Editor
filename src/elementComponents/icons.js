@@ -61,7 +61,8 @@ const Icons = (props) => {
     saveRef.current = saveOpen;
     settingRef.current = settingsOpen;
 
-    React.useEffect(() => {
+    useDidMountEffect(() => {
+        localStorage.setItem("dark", `${dark}`);
         props.setDarkMode(dark);
     }, [dark])
 
@@ -112,7 +113,7 @@ const Icons = (props) => {
             <HelpDialog open={helpDialogOpen} setOpen={setHelpDialogOpen} />
             <SimpleDialog onClose={setCdialogOpen} Icons={icons} open={cDialogOpen} />
 
-            <SaveButtton open={settingsOpen} setOpen={setSettingsOpen} style={{ transition: "transform 1s", transform: translate  }} backgroundColor={"#3f51b5"} color={ "primary" } icon={<SettingsIcon  />}>
+            <SaveButtton disabled={ translate === `translate(${_trans}px, 0)` ? true : false } open={settingsOpen} setOpen={setSettingsOpen} style={{ transition: "transform 1s", transform: translate  }} backgroundColor={"#3f51b5"} color={ "primary" } icon={<SettingsIcon  />}>
                 <Fab onClick={() => setDark(prev => !prev)} style={{margin: "10px", backgroundColor: "#2a2d2f", color: "#f1ff1a"}}>
                     <Brightness3Icon />
                 </Fab>
@@ -126,7 +127,7 @@ const Icons = (props) => {
 
             </SaveButtton>
 
-            <SaveButtton open={saveOpen} setOpen={setSaveOpen} style={{ transition: "transform 1s",  transform: translate }} backgroundColor={"#f50057"} color={ "secondary" } icon={ <SaveAltIcon /> }>
+            <SaveButtton disabled={ translate === `translate(${_trans}px, 0)` ? true : false } open={saveOpen} setOpen={setSaveOpen} style={{ transition: "transform 1s",  transform: translate }} backgroundColor={"#f50057"} color={ "secondary" } icon={ <SaveAltIcon /> }>
 
                 <Fab onClick={e => props.save("pdf")} style={{margin: "10px", background: "#2a2d2f"}}>
                     <img style={{width: "32px"}} src={logoPDF}></img>

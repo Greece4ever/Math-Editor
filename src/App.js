@@ -4,7 +4,7 @@ import { convertLinks } from './components/replace';
 
 import "./App.css";
 
-import useInterval, {useEffectAllDepsChange} from "./components/hooks";
+import useInterval, {useEffectAllDepsChange, useDidMountEffect} from "./components/hooks";
 
 import Grid from '@material-ui/core/Grid';
 
@@ -50,6 +50,24 @@ function App() {
   const [value, setValue]   = useState([""]);  
   const [value2, setValue2] = useState("");
 
+  useEffect(() => {
+    let isDark = localStorage.getItem("dark");
+    let text   = localStorage.getItem("html");
+
+    if (isDark === "true")
+    {
+      setDarkMode(true);
+    }
+
+    if (text)
+    {
+      if (text.trim() !== "")
+        handleChange( text )
+    }
+    // __render( text );
+  }, [])
+
+
   const setDarkMode = (val) => {
     if (!val)
       return disableDarkMode();
@@ -63,7 +81,7 @@ function App() {
 
   // save localstorage
   useInterval(() => {
-    localStorage.setItem("html", textValue)
+    localStorage.setItem("html", textValue);
   }, 15 * 1000);
   
 
@@ -90,7 +108,7 @@ function App() {
   }
 
   // Print when hit PRINT .PDF
-  useEffect(() => {
+  useDidMountEffect(() => {
     if (hidden) {
       let latexElement = document.getElementById("NOTICEME");
       let type = latexElement.getAttribute("val");
@@ -155,6 +173,7 @@ function App() {
 
 
   const __render = (val) => {
+    debugger
     let code_symbols, _links;
     [val, _links] = convertLinks(val);
     [val, code_symbols] = findAllMath(val, "```", "kostas", "pre");
@@ -164,6 +183,7 @@ function App() {
     setMathSymbols( math_symbols )
     setCodeSymbols( code_symbols )
     setLinks(_links);
+    debugger
   }
 
 
@@ -321,7 +341,7 @@ function App() {
         <Grid ref={_grid} style={{borderRight: `10px solid ${main_color}`, paddingBottom: 0, paddingRight: 0, height: _height}} item xs={6}>
           <AceEditor  
           onLoad={(editor) => {
-            editor.session.setNewLineMode("unix");
+            editor.session.setNewLineMode("unix"); // \n instead of \r\n
           }}
 
           value={textValue}

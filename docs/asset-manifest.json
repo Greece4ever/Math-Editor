@@ -1,23 +1,26 @@
 {
   "files": {
-    "main.css": "/Math-Editor/static/css/main.d9375959.chunk.css",
-    "main.js": "/Math-Editor/static/js/main.0370157d.chunk.js",
-    "main.js.map": "/Math-Editor/static/js/main.0370157d.chunk.js.map",
-    "runtime-main.js": "/Math-Editor/static/js/runtime-main.3e391ead.js",
-    "runtime-main.js.map": "/Math-Editor/static/js/runtime-main.3e391ead.js.map",
-    "static/js/2.f420692a.chunk.js": "/Math-Editor/static/js/2.f420692a.chunk.js",
-    "static/js/2.f420692a.chunk.js.map": "/Math-Editor/static/js/2.f420692a.chunk.js.map",
-    "static/js/3.e03293fb.chunk.js": "/Math-Editor/static/js/3.e03293fb.chunk.js",
-    "static/js/3.e03293fb.chunk.js.map": "/Math-Editor/static/js/3.e03293fb.chunk.js.map",
+    "main.css": "/Math-Editor/static/css/main.39d469c3.chunk.css",
+    "main.js": "/Math-Editor/static/js/main.d8b0758d.chunk.js",
+    "main.js.map": "/Math-Editor/static/js/main.d8b0758d.chunk.js.map",
+    "runtime-main.js": "/Math-Editor/static/js/runtime-main.e2f55bd0.js",
+    "runtime-main.js.map": "/Math-Editor/static/js/runtime-main.e2f55bd0.js.map",
+    "static/js/2.122dc6f1.chunk.js": "/Math-Editor/static/js/2.122dc6f1.chunk.js",
+    "static/js/2.122dc6f1.chunk.js.map": "/Math-Editor/static/js/2.122dc6f1.chunk.js.map",
+    "static/js/3.6e73a49e.chunk.js": "/Math-Editor/static/js/3.6e73a49e.chunk.js",
+    "static/js/3.6e73a49e.chunk.js.map": "/Math-Editor/static/js/3.6e73a49e.chunk.js.map",
     "index.html": "/Math-Editor/index.html",
-    "static/css/main.d9375959.chunk.css.map": "/Math-Editor/static/css/main.d9375959.chunk.css.map",
-    "static/js/2.f420692a.chunk.js.LICENSE.txt": "/Math-Editor/static/js/2.f420692a.chunk.js.LICENSE.txt",
-    "static/media/index.css": "/Math-Editor/static/media/math2.d42d12cd.otf"
+    "static/css/main.39d469c3.chunk.css.map": "/Math-Editor/static/css/main.39d469c3.chunk.css.map",
+    "static/js/2.122dc6f1.chunk.js.LICENSE.txt": "/Math-Editor/static/js/2.122dc6f1.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/Math-Editor/static/media/math2.d42d12cd.otf",
+    "static/media/pdf.20a57c59.svg": "/Math-Editor/static/media/pdf.20a57c59.svg",
+    "static/media/png-file-format.403487f6.svg": "/Math-Editor/static/media/png-file-format.403487f6.svg",
+    "static/media/svg.052d1346.svg": "/Math-Editor/static/media/svg.052d1346.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.3e391ead.js",
-    "static/js/2.f420692a.chunk.js",
-    "static/css/main.d9375959.chunk.css",
-    "static/js/main.0370157d.chunk.js"
+    "static/js/runtime-main.e2f55bd0.js",
+    "static/js/2.122dc6f1.chunk.js",
+    "static/css/main.39d469c3.chunk.css",
+    "static/js/main.d8b0758d.chunk.js"
   ]
 }

@@ -18,7 +18,7 @@ const SaveButton = (props) => {
 
     return (
         <div style={props.style}>       
-            <Fab color={props.color} style={{marginBottom: "10px", marginRight: "10px"}} onClick={e => HandleFabClick(e)}>
+            <Fab disabled={props.disabled} color={props.color} style={{marginBottom: "10px", marginRight: "10px"}} onClick={e => HandleFabClick(e)}>
                 {props.icon}
             <Popover 
                 open={open}

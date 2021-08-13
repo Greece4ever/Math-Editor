@@ -179,12 +179,12 @@ pre span:before {
   #NOTICEME, #NOTICEME * {
     visibility: visible;
   }
-  #NOTICEME {
+  /* #NOTICEME {
     position: absolute;
     overflow: auto;
     left: 0;
     top: 0;
-  }
+  } */
 }
 
 
